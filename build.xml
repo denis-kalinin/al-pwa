@@ -1,0 +1,127 @@
+<project>
+
+    <!-- npm task -->
+    <target name="npm" depends="npm-build" />
+
+    <target name="npm-build" depends="nodejs">
+        <sequential>
+            <exec executable="${node.npm}" dir=".">
+                <arg line="install"/>
+            </exec>
+            <exec executable="${node.npm}" dir=".">
+                <arg value="run" />
+                <arg value="build" />
+            </exec>
+        </sequential>
+    </target>
+
+    <!-- the main task to install Node.js if required -->
+    <target name="nodejs" unless="npmExists" depends="nodejs-install-check">
+        <antcall target="nodejs-install" />
+    </target>
+    <target name="nodejs-install-check" depends="nodejs-install-settings">
+        <pathconvert property="filePath" setonempty="false" pathsep=" ">
+        <path>
+            <fileset dir="${node.dir}" includes="${node.npmExeFile}" />
+        </path>
+        </pathconvert>
+        <condition property="npmExists">
+            <resourcecount when="greater" count="0">
+                <fileset file="${filePath}"/>
+            </resourcecount>
+        </condition>
+    </target>
+    
+    <!-- Install Node.js - called by nodejs target if !npmExists -->
+    <target name="nodejs-install" depends="nodejs-install-windows, nodejs-install-unix" />
+    <!-- OS specific Node.js installation -->
+    <target name="nodejs-install-unix" unless="isWindows" depends="check-os">
+        <echo message="Downloading Node.js for Unux" />
+        <get src="${node.url}" dest="${node.archive.path}"/>
+        <!--
+        <unxz src="${node.archive.path}" dest="${node.dir}/node.tar" />
+        <untar dest="${node.dir}">
+            <fileset dir="${node.dir}">
+                <include name="**/node.tar" />
+            </fileset>
+            <cutdirsmapper dirs="1" />
+        </untar>
+        -->
+        <untar compression="xz" src="${node.archive.path}" dest="${node.dir}">
+            <fileset dir="${node.dir}">
+                <include name="**/${node.archive.file}" />
+            </fileset>
+            <cutdirsmapper dirs="1" />
+        </untar>
+        <delete file="${node.archive.path}" />
+        <!-- elete file="${node.dir}/node.tar" / -->
+        <!--chmod file="${node.dir}/bin/node" perm="ugo+x" /-->
+        <symlink link="${node.dir}/bin/npm" overwrite="true" resource="../lib/node_modules/npm/bin/npm-cli.js" />
+        <symlink link="${node.dir}/bin/npx" overwrite="true" resource="../lib/node_modules/npm/bin/npx-cli.js" />
+        <chmod dir="${node.dir}/bin" perm="ugo+x" includes="**/*" />
+    </target>
+    <target name="nodejs-install-windows" if="isWindows" depends="check-os">
+        <echo message="Downloading Node.js for Windows" />
+        <get src="${node.url}" dest="${node.archive.path}"/>
+        <unzip dest="${node.dir}">
+            <fileset dir="${node.dir}">
+                <include name="**/${node.archive.file}" />
+            </fileset>
+            <cutdirsmapper dirs="1" />
+        </unzip>
+        <delete file="${node.archive.path}" />
+    </target>
+    <!-- Node.js settings -->
+    <target name="nodejs-install-settings" depends="nodejs-install-settings-windows,nodejs-install-settings-unix,nodejs-install-settings-mac">
+        <property name="node.dir" value="${user.home}/.ant/node" />
+        <mkdir dir="${node.dir}"/>
+        <property name="node.archive.path" value="${node.dir}/${node.archive.file}" />
+        <set-npm nodejsDir="${node.dir}" npmExeFile="${node.npmExeFile}" />
+    </target>
+
+    <!-- OS specific Node.js settings -->
+    <target name="nodejs-install-settings-windows" if="isWindows" depends="check-os">
+        <property name="node.url" value="https://nodejs.org/dist/v12.14.0/node-v12.14.0-win-x64.zip" />
+        <property name="node.npmExeFile" value="npm.cmd" />
+        <property name="node.archive.file" value="node.zip" />
+    </target>
+    <target name="nodejs-install-settings-unix" if="isUnix" depends="check-os">
+        <property name="node.url" value="https://nodejs.org/dist/v12.14.0/node-v12.14.0-linux-x64.tar.xz" />
+        <property name="node.npmExeFile" value="bin/npm" />
+        <property name="node.archive.file" value="node.tar.xz" />
+    </target>
+    <target name="nodejs-install-settings-mac" if="isMac" depends="check-os">
+        <property name="node.url" value="https://nodejs.org/dist/v12.14.0/node-v12.14.0-darwin-x64.tar.xz" />
+        <property name="node.npmExeFile" value="bin/npm" />
+        <property name="node.archive.file" value="node.tar.xz" />
+    </target>
+ 
+
+    <!-- set node.npm property - i.e. path to npm executable -->
+    <macrodef name="set-npm">
+        <attribute name="nodejsDir"/>
+        <attribute name="npmExeFile" default="npm"/>
+        <sequential>
+            <property name="node.npm" value="${node.dir}/${node.npmExeFile}" />
+            <echo message="NPM is ${node.npm}" />
+        </sequential>
+    </macrodef>
+    <!-- check OS (Windows, Linux, Mac) -->
+    <target name="check-os">
+        <condition property="isWindows">
+            <os family="windows" />
+        </condition>
+        <condition property="isUnix">
+            <and>
+                <os family="unix" />
+                <not><os family="mac" /></not>
+            </and>
+        </condition>
+        <condition property="isMac">
+            <os family="mac" />
+        </condition>
+        <echo message="This is Windows: ${isWindows}" />
+        <echo message="This is Unix: ${isUnix}" />
+        <echo message="This is Mac: ${isMac}" />
+    </target>
+</project>
