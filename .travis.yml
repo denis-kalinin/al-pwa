@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+- '13.5.0'
+cache: npm
+branches:
+  only:
+  - master
+
+script: "npm run build"
+before_deploy: "echo 'Uploading to Yandex.Cloud...'"
+deploy:
+  provider: s3
+  endpoint: https://storage.yandexcloud.net
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
+  bucket: "al-pwa"
+  region: "ru-central1"
+  skip_cleanup: true
+  local_dir: "./dist"
+  on:
+    branch: master
+
+after_deploy: "echo 'Uploaded to Yandex.Cloud'"
