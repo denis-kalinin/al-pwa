@@ -1,8 +1,11 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <v-toolbar-title>AL PWA</v-toolbar-title>
+      <v-toolbar-title><router-link to="/" class="invertlink">
+        AL PWA
+      </router-link></v-toolbar-title>
       <v-btn to="/about">About</v-btn>
+      <v-btn to="/fetchExample">Fetch Example</v-btn>
       <v-spacer></v-spacer>
       <offline-message></offline-message>
     </v-app-bar>
@@ -30,3 +33,9 @@ import OfflineMessage from '@/components/OfflineMessage.vue';
 })
 export default class App extends Vue {}
 </script>
+
+<style scoped>
+  .invertlink {
+    color: #fff;
+  }
+</style>

@@ -16,6 +16,11 @@ const routes = [
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
+  {
+    path: '/fetchExample',
+    name: 'fetchExample',
+    component: () => import(/* webpackChunkName: "fetchExample" */ '../views/FetchExample.vue'),
+  },
 ];
 
 const router = new VueRouter({
