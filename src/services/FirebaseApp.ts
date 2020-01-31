@@ -1,3 +1,4 @@
+/*
 import firebase from 'firebase/app';
 
 export default class FirebaseApp {
@@ -14,3 +15,4 @@ export default class FirebaseApp {
     firebase.initializeApp(firebaseConfig);
   }
 }
+*/

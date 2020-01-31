@@ -5,11 +5,11 @@ import '@/registerServiceWorker';
 import router from '@/router';
 import store from '@/store';
 import vuetify from '@/plugins/vuetify';
-import FirebaseApp from './services/FirebaseApp';
+// import FirebaseApp from './services/FirebaseApp';
 
 Vue.config.productionTip = false;
 
-const a = new FirebaseApp();
+// const a = new FirebaseApp();
 
 new Vue({
   router,

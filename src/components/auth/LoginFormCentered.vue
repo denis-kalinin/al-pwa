@@ -60,6 +60,7 @@
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { Vue, Component } from 'vue-property-decorator';
 import Authentication from './Authentication';
+import loginPasswordAuthProvider from './LoginPasswordProvider';
 
 @Component({
   name: 'LoginFormCentered',
@@ -70,8 +71,10 @@ export default class LoginFormCentered extends Vue {
   password: string = 'qwerty';
 
   sendAuthentication() {
-    // Authentication.authenticate(this.email, this.password, null);
-    const x = this;
+    Authentication.authenticate(this.email, this.password, loginPasswordAuthProvider)
+      .then((response) => {
+        console.log('Token', response.data.idToken);
+      });
   }
 }
 </script>
