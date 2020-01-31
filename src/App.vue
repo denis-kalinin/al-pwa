@@ -6,6 +6,7 @@
       </router-link></v-toolbar-title>
       <v-btn to="/about">About</v-btn>
       <v-btn to="/fetchExample">Fetch Example</v-btn>
+      <v-btn to="/tableList">TableList</v-btn>
       <v-spacer></v-spacer>
       <offline-message></offline-message>
     </v-app-bar>
@@ -21,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Vue, Component } from 'vue-property-decorator';
 import OfflineMessage from '@/components/OfflineMessage.vue';
 
 

@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import LoginFormCentered from '@/components/LoginFormCentered.vue';
+import { Vue, Component } from 'vue-property-decorator';
+import LoginFormCentered from '@/components/auth/LoginFormCentered.vue';
 
 @Component({
   name: 'App',

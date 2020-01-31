@@ -28,7 +28,13 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field label="Login" name="login" prepend-icon="person" type="text" />
+              <v-text-field
+                label="E-mail"
+                name="email"
+                prepend-icon="person"
+                type="text"
+                v-model="email"
+              />
 
               <v-text-field
                 id="password"
@@ -36,12 +42,13 @@
                 name="password"
                 prepend-icon="lock"
                 type="password"
+                v-model="password"
               />
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="primary">Login</v-btn>
+            <v-btn color="primary" @click="sendAuthentication">Login</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -51,15 +58,20 @@
 
 <script lang="ts">
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import { Vue, Component } from 'vue-property-decorator';
+import Authentication from './Authentication';
 
 @Component({
   name: 'LoginFormCentered',
 })
 export default class LoginFormCentered extends Vue {
-  email = null;
+  email: string = 'test@example.com';
 
-  password = null;
+  password: string = 'qwerty';
+
+  sendAuthentication() {
+    // Authentication.authenticate(this.email, this.password, null);
+    const x = this;
+  }
 }
 </script>

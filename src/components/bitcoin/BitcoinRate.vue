@@ -29,23 +29,25 @@
   </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import { getRates } from '../components/bitcoin/RateUtils';
-import { ExchangeRate } from '../components/bitcoin/model/ExchangeRate';
+import { Vue, Component } from 'vue-property-decorator';
+import { getRates } from './RateUtils';
+// import ExchangeRate from './model/ExchangeRate';
 
 @Component({
-  name: 'FetchExample',
+  name: 'BitcoinRate',
 })
-export default class FetchExample extends Vue {
-  loading : Boolean = false;
+export default class BitcoinRate extends Vue {
+  loading : Boolean = true;
 
-  rates : ExchangeRate[] = [];
+  rates!: any[];
 
   error = null;
 
   mounted() {
+    this.rates = [];
     getRates().then((result) => {
       this.rates = result;
+      this.loading = false;
     });
   }
 }

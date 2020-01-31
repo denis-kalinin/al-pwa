@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 // import Home from '../views/Home.vue';
 import HomePage from '@/components/HomePage.vue';
+import LoginFormCentered from '@/components/auth/LoginFormCentered.vue';
 
 Vue.use(VueRouter);
 
@@ -17,9 +18,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
   {
-    path: '/fetchExample',
-    name: 'fetchExample',
-    component: () => import(/* webpackChunkName: "fetchExample" */ '../views/FetchExample.vue'),
+    path: '/tableList',
+    name: 'tableList',
+    component: () => import(/* webpackChunkName: "leftmenu" */ '../views/TableListView.vue'),
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginFormCentered,
   },
 ];
 
