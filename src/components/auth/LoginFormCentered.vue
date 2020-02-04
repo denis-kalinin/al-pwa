@@ -1,6 +1,7 @@
 <template>
   <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
+    <p v-if="responseData" v-text="responseData"></p>
+    <v-row align="center" justify="center" v-else>
       <v-col cols="12" sm="8" md="4">
         <v-card class="elevation-12"><v-toolbar color="primary" dark flat>
             <v-toolbar-title>Login form</v-toolbar-title>
@@ -70,10 +71,13 @@ export default class LoginFormCentered extends Vue {
 
   password: string = 'qwerty';
 
+  responseData?: string = 'helel';
+
   sendAuthentication() {
     Authentication.authenticate(this.email, this.password, loginPasswordAuthProvider)
       .then((response) => {
-        console.log('Token', response.data.idToken);
+        this.responseData = response.data;
+        this.$store.dispatch('singIn', response.data);
       });
   }
 }

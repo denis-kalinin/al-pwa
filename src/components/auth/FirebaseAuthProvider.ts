@@ -4,9 +4,9 @@ import { IAxiousRequestData } from './IAxiosRequestData';
 export default class FirebaseAuthProvider implements IAuthProvider {
   readonly name: string = 'FirebaseAuthProvider';
 
-  private apiKey!: string;
+  apiKey!: string;
 
-  constructor(apiKey:string) {
+  constructor(apiKey: string) {
     this.apiKey = apiKey;
   }
 

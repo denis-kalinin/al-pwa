@@ -4,11 +4,17 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {
+    singInProfile: {},
   },
   mutations: {
+    singIn(state, payload) {
+      state.singInProfile = payload;
+    },
   },
   actions: {
+    signIn() {},
   },
   modules: {
   },

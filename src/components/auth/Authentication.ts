@@ -24,9 +24,9 @@ export default class Authentication {
    *
    * @returns the current token if it has not expired. Otherwise, this will
    * refresh the token and return a new one or,
-   * if user hasn't logged in yet - `null`
+   * @throws if user hasn't logged in yet
    */
-  public static getJWT(): Promise<string | null> {
+  public static getJWT(): Promise<string> {
     return Promise.reject(new Error('Not implemented'));
   }
 }
