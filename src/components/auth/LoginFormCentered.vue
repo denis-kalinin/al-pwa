@@ -71,13 +71,14 @@ export default class LoginFormCentered extends Vue {
 
   password: string = 'qwerty';
 
-  responseData?: string = 'helel';
+  responseData: string | null = null;
 
   sendAuthentication() {
     Authentication.authenticate(this.email, this.password, loginPasswordAuthProvider)
       .then((response) => {
         this.responseData = response.data;
-        this.$store.dispatch('singIn', response.data);
+        console.log(response.data);
+        // this.$store.dispatch('singIn', response.data);
       });
   }
 }

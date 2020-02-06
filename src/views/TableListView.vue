@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
+// import * as firebase from 'firebase/app';
+// import 'firebase/firestore';
 import { Vue, Component } from 'vue-property-decorator';
 // import { RouteConfig } from 'vue-router';
 
@@ -41,7 +41,7 @@ export default class TableListView extends Vue {
     ];
     this.$router.addRoutes(tableRoutes);
   }
-
+/*
   mounted() {
     const query: firebase.firestore.Query<firebase.firestore.DocumentData> = firebase.firestore()
       .collection('tables')
@@ -54,5 +54,6 @@ export default class TableListView extends Vue {
         });
       });
   }
+*/
 }
 </script>
