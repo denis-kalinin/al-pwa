@@ -1,4 +1,6 @@
 export interface IAuthenticationState {
-  idToken: string;
+  idToken?: string;
   authenticated: boolean;
+  setIdToken(idToken: string): void;
+  updateIdToken(payload: string): void;
 }

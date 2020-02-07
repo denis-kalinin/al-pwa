@@ -1,6 +1,6 @@
 <template>
   <v-container class="fill-height" fluid>
-    <p v-if="idToken" v-text="idToken"></p>
+    <p v-if="isAuthenticated" v-text="idToken"></p>
     <v-row align="center" justify="center" v-else>
       <v-col cols="12" sm="8" md="4">
         <v-card class="elevation-12"><v-toolbar color="primary" dark flat>
@@ -60,12 +60,13 @@
 <script lang="ts">
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { Vue, Component } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
-// import AuthenticationStateModule from '../../store/modules/auth';
+import { getModule } from 'vuex-module-decorators';
+// import { namespace } from 'vuex-class';
+import AuthenticationStateModule from '../../store/modules/auth';
 import Authentication from './Authentication';
 import loginPasswordAuthProvider from './LoginPasswordProvider';
 
-const auth = namespace('authentication');
+// const auth = namespace('authentication');
 
 @Component({
   name: 'LoginFormCentered',
@@ -75,27 +76,33 @@ export default class LoginFormCentered extends Vue {
 
   readonly password: string = 'qwerty';
 
+  private authState!: AuthenticationStateModule
+
+  created() {
+    this.authState = getModule(AuthenticationStateModule, this.$store);
+  }
+
   // private authState = AuthenticationStateModule;
 
-  @auth.State
-  public idToken?: string;
-  // get idToken() {
-  // return this.authState.idToken;
-  // }
+  // @auth.State
+  // public idToken?: string;
+  get idToken() {
+    return this.authState.idToken;
+  }
 
   public sendAuthentication() {
     Authentication.authenticate(this.email, this.password, loginPasswordAuthProvider)
       .then((response) => {
-        this.updateIdToken(response.data?.idToken);
-        // this.authState.updateIdToken(response.data?.idToken);
+        // this.updateIdToken(response.data?.idToken);
+        this.authState.updateIdToken(response.data?.idToken);
       });
   }
 
-  @auth.Action
-  public updateIdToken!: (idToken : string) => void;
+  // @auth.Action
+  // public updateIdToken!: (idToken : string) => void;
 
-  // get isAuthenticated() {
-  // return this.authState.authenticated;
-  // }
+  get isAuthenticated() {
+    return this.authState.authenticated;
+  }
 }
 </script>

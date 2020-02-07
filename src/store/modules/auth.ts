@@ -15,10 +15,10 @@ export default class AuthenticationState extends VuexModule implements IAuthenti
   @Mutation
   public setIdToken(idToken: string): void {
     this.idToken = idToken;
-    if (idToken) this.authenticated = true;
+    this.authenticated = !!idToken && idToken.length > 0;
   }
 
-  @Action({ commit: 'setIdToken' })
+  @Action({ rawError: true })
   updateIdToken(payload: string) {
     this.context.commit('setIdToken', payload);
   }
