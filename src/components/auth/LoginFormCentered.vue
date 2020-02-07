@@ -1,6 +1,6 @@
 <template>
   <v-container class="fill-height" fluid>
-    <p v-if="responseData" v-text="responseData"></p>
+    <p v-if="authenticationState.idToken" v-text="authenticationState.idToken"></p>
     <v-row align="center" justify="center" v-else>
       <v-col cols="12" sm="8" md="4">
         <v-card class="elevation-12"><v-toolbar color="primary" dark flat>
@@ -60,25 +60,48 @@
 <script lang="ts">
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { Vue, Component } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 import Authentication from './Authentication';
 import loginPasswordAuthProvider from './LoginPasswordProvider';
 
 @Component({
   name: 'LoginFormCentered',
+  computed: {
+    ...mapGetters({
+      authenticationState: 'authenticationState',
+    }),
+  },
+  watch: {
+    authenticationState(newValue, oldValue) {
+      console.log('new value', newValue, oldValue);
+    },
+  },
 })
 export default class LoginFormCentered extends Vue {
-  email: string = 'test@example.com';
+  readonly email: string = 'test@example.com';
 
-  password: string = 'qwerty';
+  readonly password: string = 'qwerty';
 
-  responseData: string | null = null;
+  token: string | boolean = false;
+  /*
+  created() {
+    this.$store.watch(
+      (state) => {
+        console.log('Watch');
+        return state.jwt;
+      },
+      (newValue, oldValue) => {
+        console.log(`Updating from ${oldValue} to ${newValue}`);
+        this.token = newValue;
+      },
+    );
+  }
+  */
 
   sendAuthentication() {
     Authentication.authenticate(this.email, this.password, loginPasswordAuthProvider)
       .then((response) => {
-        this.responseData = response.data;
-        console.log(response.data);
-        // this.$store.dispatch('singIn', response.data);
+        this.$store.dispatch('jwt', response.data?.idToken);
       });
   }
 }

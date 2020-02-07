@@ -50,3 +50,6 @@ ant npm
 - `~/.ant/node/npm run build`
 
 __The result of the build is in the `dist` directory!__
+
+
+[How to write a Vuejs app in Typescript]:https://blog.logrocket.com/how-to-write-a-vue-js-app-completely-in-typescript/
