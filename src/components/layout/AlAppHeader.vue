@@ -40,7 +40,10 @@
           alt="Vuetify"
         /></v-avatar>
     </v-btn>
-    <v-btn icon :to="{ name: 'login'}">
+    <v-btn v-if="isAuthenticated" icon>
+      <v-icon>mdi-account-circle</v-icon>
+    </v-btn>
+    <v-btn v-else icon :to="{ name: 'login'}">
       <v-icon>mdi-location-enter</v-icon>
     </v-btn>
   </v-app-bar>
@@ -48,8 +51,20 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { getModule } from 'vuex-module-decorators';
+import AuthenticationStateModule from '@/store/modules/auth';
 @Component({
   name: 'AlAppHeader',
 })
-export default class AppHeader extends Vue {}
+export default class AppHeader extends Vue {
+  private authState!: AuthenticationStateModule
+
+  created() {
+    this.authState = getModule(AuthenticationStateModule, this.$store);
+  }
+
+  get isAuthenticated(): boolean {
+    return this.authState.authenticated;
+  }
+}
 </script>

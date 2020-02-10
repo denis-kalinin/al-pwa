@@ -91,11 +91,7 @@ export default class LoginFormCentered extends Vue {
   }
 
   public sendAuthentication() {
-    Authentication.authenticate(this.email, this.password, loginPasswordAuthProvider)
-      .then((response) => {
-        // this.updateIdToken(response.data?.idToken);
-        this.authState.updateIdToken(response.data?.idToken);
-      });
+    Authentication.authenticate(this.email, this.password, loginPasswordAuthProvider);
   }
 
   // @auth.Action

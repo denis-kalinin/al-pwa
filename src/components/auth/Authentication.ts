@@ -1,9 +1,15 @@
-// import firebase, { auth } from 'firebase/app';
-// import 'firebase/auth';
 import axios from 'axios';
+import { getModule } from 'vuex-module-decorators';
 import { IAuthProvider } from './IAuthProvider';
+import store from '@/store';
+import AuthenticationStateModule from '@/store/modules/auth';
+import loginPasswordAuthProvider from '@/components/auth/LoginPasswordProvider';
 
 export default class Authentication {
+  private static authState: AuthenticationStateModule = getModule(AuthenticationStateModule, store);
+
+  public static currentAuthProvider = loginPasswordAuthProvider;
+
   /**
    * Authenticates with username and password
    * @param username
@@ -11,12 +17,36 @@ export default class Authentication {
    * @todo
    */
   public static authenticate(
-    username: string, password: string,
+    username: string,
+    password: string,
     authProvider: IAuthProvider,
   ): Promise<any> {
-    const { url, data, config } = authProvider.getRequestData({ username, password });
+    const { url, data, config } = authProvider.getNewJWTRequestData({ username, password });
 
-    return axios.post(url, data, config);
+    return axios.post(url, data, config)
+      .then((response) => {
+        // this.updateIdToken(response.data?.idToken);
+        this.authState.updateIdToken(response.data?.idToken);
+        this.authState.updateRefreshToken(response.data?.refreshToken);
+      });
+  }
+
+  public static refreshAuthentication(
+    refreshToken: string,
+    authProvider: IAuthProvider,
+  ): Promise<string> {
+    const { url, data, config } = authProvider.getRefreshJWTRequestData(refreshToken);
+
+    return axios.post(url, data, config)
+      .then((response) => {
+        // this.updateIdToken(response.data?.idToken);
+        this.authState.updateIdToken(response.data?.idToken);
+        this.authState.updateRefreshToken(response.data?.refreshToken);
+        if (response.data?.idToken) {
+          return response.data.idToken;
+        }
+        throw new Error('idToken is woring');
+      });
   }
 
   /**
@@ -26,7 +56,14 @@ export default class Authentication {
    * refresh the token and return a new one or,
    * @throws if user hasn't logged in yet
    */
-  public static getJWT(): Promise<string> {
-    return Promise.reject(new Error('Not implemented'));
+  public static getJWT(
+    authProvider: IAuthProvider = Authentication.currentAuthProvider,
+  ) : Promise<string> {
+    const { idToken } = Authentication.authState;
+    if (idToken && idToken.length > 0) return Promise.resolve(idToken);
+    if (authProvider.refreshToken) {
+      return Authentication.refreshAuthentication(authProvider.refreshToken, authProvider);
+    }
+    return Promise.reject(new Error('Sing In!'));
   }
 }

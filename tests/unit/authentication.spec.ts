@@ -13,7 +13,7 @@ const credentials = { username: 'test@example.com', password: 'qwerty' };
 
 describe('Firebase Authentication tests', () => {
   it('Sing in with IAuthProvider', (done) => {
-    const { url, data, config } = authProvider.getRequestData(credentials);
+    const { url, data, config } = authProvider.getNewJWTRequestData(credentials);
     axios
       .post(url, data, config)
       .catch((error) => {

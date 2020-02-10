@@ -1,5 +1,5 @@
 import {
-  VuexModule, Module, Mutation, Action, getModule,
+  VuexModule, Module, Mutation, Action, getModule, MutationAction,
 } from 'vuex-module-decorators';
 import { IAuthenticationState } from '@/store/modules/IAuthenticationState';
 // import store from '@/store';
@@ -10,7 +10,15 @@ import { IAuthenticationState } from '@/store/modules/IAuthenticationState';
 export default class AuthenticationState extends VuexModule implements IAuthenticationState {
   public idToken: string = '';
 
-  public authenticated: boolean = false;
+  private session?: Storage = globalThis.sessionStorage;
+
+  public authenticated: boolean = !!this.session?.getItem('refreshToken');
+
+  get refreshToken(): string | undefined {
+    const refreshToken = this.session?.getItem('refreshToken');
+    if (refreshToken && refreshToken.length > 0) return refreshToken;
+    return undefined;
+  }
 
   @Mutation
   public setIdToken(idToken: string): void {
@@ -18,9 +26,19 @@ export default class AuthenticationState extends VuexModule implements IAuthenti
     this.authenticated = !!idToken && idToken.length > 0;
   }
 
-  @Action({ rawError: true })
-  updateIdToken(payload: string) {
-    this.context.commit('setIdToken', payload);
+  @Mutation
+  public setRefreshToken(refreshToken: string): void {
+    if (this.session) this.session.setItem('refreshToken', refreshToken);
+  }
+
+  @Action
+  updateIdToken(idToken: string) {
+    this.context.commit('setIdToken', idToken);
+  }
+
+  @Action
+  updateRefreshToken(refreshToken: string) {
+    this.context.commit('setRefreshToken', refreshToken);
   }
 }
 // const AuthenticationStateModule = getModule(AuthenticationState);
