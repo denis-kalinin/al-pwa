@@ -31,12 +31,13 @@ export default class FirebaseAuthProvider implements IAuthProvider {
   getRefreshJWTRequestData(refreshToken: string): IAxiousRequestData {
     return {
       url: 'https://securetoken.googleapis.com/v1/token',
-      data: {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-      },
+      data: {},
       config: {
-        params: { key: this.apiKey },
+        params: {
+          key: this.apiKey,
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        },
         method: 'POST',
         headers: {
           'content-type': 'application/x-www-form-urlencoded',

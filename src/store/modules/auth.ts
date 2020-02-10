@@ -15,8 +15,11 @@ export default class AuthenticationState extends VuexModule implements IAuthenti
   public authenticated: boolean = !!this.session?.getItem('refreshToken');
 
   get refreshToken(): string | undefined {
+    const id = this.idToken;
     const refreshToken = this.session?.getItem('refreshToken');
-    if (refreshToken && refreshToken.length > 0) return refreshToken;
+    if (refreshToken && refreshToken.length > 0) {
+      return refreshToken;
+    }
     return undefined;
   }
 
@@ -29,6 +32,7 @@ export default class AuthenticationState extends VuexModule implements IAuthenti
   @Mutation
   public setRefreshToken(refreshToken: string): void {
     if (this.session) this.session.setItem('refreshToken', refreshToken);
+    else throw new Error('sessionStorage not found');
   }
 
   @Action
@@ -38,6 +42,7 @@ export default class AuthenticationState extends VuexModule implements IAuthenti
 
   @Action
   updateRefreshToken(refreshToken: string) {
+    console.log('Updateing refresh token', refreshToken);
     this.context.commit('setRefreshToken', refreshToken);
   }
 }
