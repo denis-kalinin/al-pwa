@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios';
-import { IAuthProvider } from '@/components/auth/IAuthProvider';
+// import { IAuthProvider } from '@/components/auth/IAuthProvider';
 import FirestoreAuthentication from './FirestoreAuthentication';
 
 const firebaseConfig = {
@@ -28,7 +28,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
   console.log('Inercepting');
   if (err.response.status === 403 && !originalRequest.retry) {
     originalRequest.retry = true;
-    console.log('Authenticating...');
+    console.log('Authentication required...');
     return firestoreAuthentication
       .authenticate('test@example.com', 'qwerty')
       .then((idToken) => {

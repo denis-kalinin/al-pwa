@@ -29,6 +29,7 @@ describe('Firestore Authentication tests', () => {
 
   it('refresh token', () => {
     const { username, password } = credentials;
+    const staleToken = 'gasjgh';
     return firestoreAuthentication
       // try refresh;
       .refreshAuthentication()
@@ -36,12 +37,12 @@ describe('Firestore Authentication tests', () => {
       .catch((err) => firestoreAuthentication.authenticate(username, password))
       // remove idToken
       .then((idToken) => {
-        authState.setIdToken('');
+        authState.setIdToken(staleToken);
         return authState.idToken;
       })
       // get new idToken
       .then((idToken) => {
-        expect(authState.idToken).to.be.equal('', 'idToken is not empty in the AuthState');
+        expect(authState.idToken).to.be.equal(staleToken, 'idToken is not kept properly in the AuthState');
         return firestoreAuthentication
           .refreshAuthentication()
           .catch((err) => {

@@ -77,6 +77,12 @@
           <v-list-item-title>Login</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item :to="{ name: 'Firestore'}">
+        <v-list-item-action><v-icon>mdi-fire</v-icon></v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title>Firestore</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
       <table-list-view></table-list-view>
     </v-list>
   </v-navigation-drawer>
@@ -105,6 +111,18 @@ export default class AlAppDrawer extends Vue {
   drawer: boolean = this.isVisible;
 
   items: any[] = [];
+
+  created() {
+    console.log('Adding Firestore route');
+    const routesToAdd = [
+      {
+        path: '/Firestore',
+        name: 'Firestore',
+        component: () => import(/* webpackChunkName: "firestore" */ '@/views/FirestoreView.vue'),
+      },
+    ];
+    this.$router.addRoutes(routesToAdd);
+  }
 
   mounted() {
     this.$root.$on('drawer', () => {
