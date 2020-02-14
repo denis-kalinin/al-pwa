@@ -5,10 +5,10 @@ import { getModule } from 'vuex-module-decorators';
 // import axios, { AxiosRequestConfig } from 'axios';
 // import Authentication from '@/components/auth/Authentication';
 // import { IAuthProvider } from '@/components/auth/IAuthProvider';
+import './mocks/storage-mock';
 import FirestoreAuthentication from '@/network-api/FirestoreAuthentication';
 import AuthenticationStateModule from '@/store/modules/auth';
 import store from '@/store';
-import './mocks/storage-mock';
 
 use(chaiAsPromised);
 

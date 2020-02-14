@@ -25,8 +25,8 @@ export default class FirestoreAuthentication {
     return axios.post(url, data, config)
       .then((response) => {
         if (response.data?.idToken) {
-          this.authState.updateIdToken(response.data.idToken);
-          this.authState.updateRefreshToken(response.data.refreshToken);
+          this.authState.setIdToken(response.data.idToken);
+          this.authState.setRefreshToken(response.data.refreshToken);
           return response.data.idToken;
         }
         throw new Error('idToken is not found in the HTTP response');
