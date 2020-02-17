@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios';
 // import { IAuthProvider } from '@/components/auth/IAuthProvider';
-import FirestoreAuthentication from './FirestoreAuthentication';
+import FirestoreAuthentication from '@/network-api/FirestoreAuthentication';
+import EventBus from '@/services/EventBus';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBc3wJtqQcjk95bk9cZZI8fzZ-PcA13hlI',
@@ -23,14 +24,36 @@ const axiosInstance = axios.create({
 
 const firestoreAuthentication = new FirestoreAuthentication();
 
+EventBus.$on('auth-request', () => {
+  console.info('auth-request');
+  EventBus.$emit('auth-response', { username: 'test@example.com', password: 'qwerty' });
+});
+
+
 axiosInstance.interceptors.response.use(undefined, (err) => {
   const originalRequest = err.config;
   console.log('Inercepting');
   if (err.response.status === 403 && !originalRequest.retry) {
     originalRequest.retry = true;
     console.log('Authentication required...');
-    return firestoreAuthentication
-      .authenticate('test@example.com', 'qwerty')
+    const authPromise : Promise<{username:string, password:string}> = new Promise(
+      (resolve, reject) => {
+        EventBus.$on('auth-response', (auth?: {username:string, password:string}) => {
+          console.log('EvenBus on auth-response', auth);
+          if (!auth) reject();
+          resolve(auth);
+        });
+      },
+    );
+    EventBus.$emit('auth-request');
+    return authPromise
+      .then((authObj) => {
+        const { username, password } = authObj;
+        return firestoreAuthentication.authenticate(username, password);
+      })
+      .catch((authError) => {
+        console.log('auth error', authError);
+      })
       .then((idToken) => {
         console.log('idToken set', idToken);
         axiosInstance.interceptors.request.use((config) => {
