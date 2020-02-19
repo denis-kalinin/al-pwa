@@ -98,6 +98,63 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+<!--
+    <v-dialog
+      v-model="authRequired"
+      max-width="500px"
+    >
+      <v-card class="elevation-12"><v-toolbar color="primary" dark flat>
+          <v-toolbar-title>Login form</v-toolbar-title>
+          <v-spacer />
+          <v-tooltip bottom>
+            <template v-slot>
+              <v-icon>mdi-code-tags</v-icon>
+            </template>
+            <span>Source</span>
+          </v-tooltip>
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                icon
+                large
+                href="https://codepen.io/johnjleider/pen/pMvGQO"
+                target="_blank"
+                v-on="on"
+              >
+                <v-icon>mdi-codepen</v-icon>
+              </v-btn>
+            </template>
+            <span>Codepen</span>
+          </v-tooltip>
+        </v-toolbar>
+        <v-card-text>
+          <v-form>
+            <v-text-field
+              label="E-mail"
+              name="email"
+              prepend-icon="person"
+              type="text"
+              v-model="email"
+            />
+
+            <v-text-field
+              id="password"
+              label="Password"
+              name="password"
+              prepend-icon="lock"
+              type="password"
+              v-model="password"
+            />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" @click="sendAuthentication">Login</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+-->
+    <login-form />
   </v-app>
 </template>
 
@@ -105,11 +162,15 @@
 import { Vue, Component } from 'vue-property-decorator';
 import AlAppHeader from '@/components/layout/AlAppHeader.vue';
 import AlAppDrawer from '@/components/layout/AlAppDrawer.vue';
+import LoginForm from '@/components/auth/LoginForm.vue';
+
+
 @Component({
   name: 'Dashboard',
   components: {
     AlAppHeader,
     AlAppDrawer,
+    LoginForm,
   },
 })
 export default class Dashboard extends Vue {

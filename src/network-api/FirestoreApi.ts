@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios';
 // import { IAuthProvider } from '@/components/auth/IAuthProvider';
 import FirestoreAuthentication from '@/network-api/FirestoreAuthentication';
-import EventBus from '@/services/EventBus';
+import EventBus from '@/services/eventbus';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBc3wJtqQcjk95bk9cZZI8fzZ-PcA13hlI',
@@ -22,54 +22,7 @@ const axiosInstance = axios.create({
   },
 });
 
-const firestoreAuthentication = new FirestoreAuthentication();
-
-EventBus.$on('auth-request', () => {
-  console.info('auth-request');
-  EventBus.$emit('auth-response', { username: 'test@example.com', password: 'qwerty' });
-});
-
-
-axiosInstance.interceptors.response.use(undefined, (err) => {
-  const originalRequest = err.config;
-  console.log('Inercepting');
-  if (err.response.status === 403 && !originalRequest.retry) {
-    originalRequest.retry = true;
-    console.log('Authentication required...');
-    const authPromise : Promise<{username:string, password:string}> = new Promise(
-      (resolve, reject) => {
-        EventBus.$on('auth-response', (auth?: {username:string, password:string}) => {
-          console.log('EvenBus on auth-response', auth);
-          if (!auth) reject();
-          resolve(auth);
-        });
-      },
-    );
-    EventBus.$emit('auth-request');
-    return authPromise
-      .then((authObj) => {
-        const { username, password } = authObj;
-        return firestoreAuthentication.authenticate(username, password);
-      })
-      .catch((authError) => {
-        console.log('auth error', authError);
-      })
-      .then((idToken) => {
-        console.log('idToken set', idToken);
-        axiosInstance.interceptors.request.use((config) => {
-          const newConfig = config;
-          if (idToken) {
-            newConfig.headers.Authorization = `Bearer ${idToken}`;
-          } else {
-            delete newConfig.headers.Autherization;
-          }
-          return newConfig;
-        });
-        return axiosInstance(originalRequest);
-      });
-  }
-  return Promise.reject(err);
-});
+const firestoreAuthentication = new FirestoreAuthentication(axiosInstance);
 
 
 export default class FirestoreApi {
@@ -80,18 +33,23 @@ export default class FirestoreApi {
     return axiosInstance;
   }
 
-  /**
+  static get firestoreAuthentication() : FirestoreAuthentication {
+    return firestoreAuthentication;
+  }
+
+  /*
    * Sets JWT token to axios interceptor as `Bearer` in `Authrization` HTTP header.
    * @param jwt if jwt `undefined` then `Autherization` HTTP header is dismantled.
-   */
+   *
   public static setJWT(jwt? : string) : void {
     FirestoreApi.axios.interceptors.request.use((config) => {
+      debugger;
       const newConfig = config;
       if (jwt) {
         newConfig.headers.Authorization = `Bearer ${jwt}`;
       } else {
         delete newConfig.headers.Autherization;
-        /*
+
         const updatedHeaders = Object.keys(config.headers)
           .filter((key) => key !== 'Authorization')
           .reduce((result, currKey) => ({
@@ -99,11 +57,12 @@ export default class FirestoreApi {
             [currKey]: config.headers[currKey],
           }), {});
         newConfig.headers = updatedHeaders;
-        */
+
       }
       return newConfig;
     });
   }
+  */
 
   /**
    * Gets data from Realtime DB

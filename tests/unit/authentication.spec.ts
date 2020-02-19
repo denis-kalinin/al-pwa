@@ -2,6 +2,7 @@ import { expect, use } from 'chai';
 import 'chai/register-should';
 import chaiAsPromised from 'chai-as-promised';
 import { getModule } from 'vuex-module-decorators';
+import axios, { AxiosResponse, AxiosInstance } from 'axios';
 // import axios, { AxiosRequestConfig } from 'axios';
 // import Authentication from '@/components/auth/Authentication';
 // import { IAuthProvider } from '@/components/auth/IAuthProvider';
@@ -12,8 +13,15 @@ import store from '@/store';
 
 use(chaiAsPromised);
 
+const axiosInstance = axios.create({
+  headers: {
+    post: { // can be common or any other method
+      header1: 'value1',
+    },
+  },
+});
 const credentials = { username: 'test@example.com', password: 'qwerty' };
-const firestoreAuthentication = new FirestoreAuthentication();
+const firestoreAuthentication = new FirestoreAuthentication(axiosInstance);
 const authState: AuthenticationStateModule = getModule(AuthenticationStateModule, store);
 
 describe('Firestore Authentication tests', () => {

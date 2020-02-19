@@ -6,11 +6,7 @@ export interface IAuthProvider {
    */
   name: string;
 
-  /**
-   * JWT's refresh token
-   */
   refreshToken?: string;
-
   /**
    * @abstract
    * Gets data for axsious to request JWT

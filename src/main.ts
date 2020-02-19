@@ -17,3 +17,6 @@ new Vue({
   vuetify,
   render: (h) => h(Dashboard),
 }).$mount('#app');
+
+const EventBus = new Vue();
+export default EventBus;

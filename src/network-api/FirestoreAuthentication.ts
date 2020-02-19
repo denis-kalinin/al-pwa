@@ -1,7 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosInstance } from 'axios';
 import { getModule } from 'vuex-module-decorators';
 import loginPasswordAuthProvider from '@/components/auth/LoginPasswordProvider';
 import store from '@/store';
+import EventBus from '@/services/eventbus';
 import { IAuthProvider } from '@/components/auth/IAuthProvider';
 import AuthenticationStateModule from '@/store/modules/auth';
 
@@ -9,6 +10,72 @@ export default class FirestoreAuthentication {
   private authProvider: IAuthProvider = loginPasswordAuthProvider;
 
   private authState: AuthenticationStateModule = getModule(AuthenticationStateModule, store);
+
+  constructor(axiosInstance: AxiosInstance) {
+    const innerAxios = axiosInstance;
+    axiosInstance.interceptors.response.use(undefined, (err) => {
+      const originalRequest = err.config;
+      console.log('Inercepting');
+      if (err.response.status === 403 && !originalRequest.retry) {
+        originalRequest.retry = true;
+        return this.getJWT()
+          .then((idToken) => {
+            debugger;
+            console.debug('idToken set', idToken);
+            /*
+            axiosInstance.interceptors.request.use((config) => {
+              const newConfig = config;
+              if (idToken) {
+                newConfig.headers.common.Authorization = `Bearer ${idToken}`;
+              } else {
+                delete newConfig.headers.common.Authorization;
+              }
+              return newConfig;
+            });
+            */
+            if (idToken) {
+              innerAxios.defaults.headers.common.Authorization = `Bearer ${idToken}`;
+              EventBus.$root.$on('auth-logout', (data:string) => {
+                console.debug('auth-logout', data);
+                axiosInstance.interceptors.request.use((config) => {
+                  debugger;
+                  const newConfig = config;
+                  delete newConfig.headers.common.Authorization;
+                  return newConfig;
+                });
+              });
+            } else {
+              delete innerAxios.defaults.headers.common.Authorization;
+            }
+            return axiosInstance(originalRequest);
+          });
+        /*
+        return authPromise
+          .then((authObj) => {
+            const { username, password } = authObj;
+            return firestoreAuthentication.authenticate(username, password);
+          })
+          .catch((authError) => {
+            console.log('auth error', authError);
+          })
+          .then((idToken) => {
+            console.log('idToken set', idToken);
+            axiosInstance.interceptors.request.use((config) => {
+              const newConfig = config;
+              if (idToken) {
+                newConfig.headers.Authorization = `Bearer ${idToken}`;
+              } else {
+                delete newConfig.headers.Autherization;
+              }
+              return newConfig;
+            });
+            return axiosInstance(originalRequest);
+          });
+        */
+      }
+      return Promise.reject(err);
+    });
+  }
 
   public setAuthenticationProvider(authProvider : IAuthProvider) : void {
     this.authProvider = authProvider;
@@ -70,6 +137,22 @@ export default class FirestoreAuthentication {
     if (refreshToken) {
       return this.refreshAuthentication(refreshToken);
     }
-    return Promise.reject(new Error('Sign-in!'));
+    console.log('Authentication required...');
+    EventBus.$emit('auth-request');
+    return new Promise(
+      (
+        resolve: (auth?: {username:string, password:string}) => void,
+        reject: () => void,
+      ) => {
+        EventBus.$once('auth-response', (auther?: {username:string, password:string}) => {
+          console.log('EventBus on auth-response', auther);
+          if (!auther) reject();
+          resolve(auther);
+        });
+      },
+    ).then((authObj) => {
+      const { username, password } = authObj;
+      return this.authenticate(username, password);
+    });
   }
 }
