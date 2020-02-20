@@ -11,7 +11,7 @@ class StorageMock implements Storage {
   }
 
   getItem(key: string): string | null {
-    console.log('MOCK get', key, this[key]);
+    console.debug('MOCK get', key, this[key]);
     return this[key];
   }
 
@@ -25,7 +25,7 @@ class StorageMock implements Storage {
   }
 
   setItem(key: string, value: string): void {
-    console.log('MOCK set', key, value);
+    console.debug('MOCK set', key, value);
     this[key] = value;
   }
 }
