@@ -47,6 +47,7 @@ export default class FirestoreUserService {
     const { url, data, config } = usernameAuthProvider.getNewJWTRequestData(credentials);
     const response = await axios.post(url, data, config);
     if (response.data?.idToken) {
+      console.debug('Login response', response.data);
       const { idToken, refreshToken } = response.data;
       FirestoreApi.addAuthentication(idToken);
       this.refreshToken = refreshToken;
