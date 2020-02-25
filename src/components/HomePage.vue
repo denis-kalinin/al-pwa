@@ -1,16 +1,16 @@
 <template>
-  <login-form-centered></login-form-centered>
+  <div>HOME PAGE</div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import LoginFormCentered from '@/components/auth/LoginFormCentered.vue';
+// import LoginFormCentered from '@/components/auth/LoginFormCentered.vue';
 
 @Component({
-  name: 'App',
+  name: 'HomePage',
   components: {
-    LoginFormCentered,
+    // LoginFormCentered,
   },
 })
-export default class App extends Vue {}
+export default class HomePage extends Vue {}
 </script>

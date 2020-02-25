@@ -1,10 +1,10 @@
 interface IFirestoreUserDetails {
   nickname?: string;
-  email: string;
+  email?: string;
 }
 
 interface IFirestoreAuthenticationState {
-  userDetails?: IFirestoreUserDetails;
+  userDetails: IFirestoreUserDetails;
   username?: string;
   /**
    * Vuex action to update authentication details

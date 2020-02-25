@@ -14,6 +14,9 @@ export default class FirestoreApi {
 
   private static responseInterceptor?: number;
 
+  private static urlBase: string = `${FirebaseConfig.firestoreApiEndpoint}\
+projects/${FirebaseConfig.projectId}/databases/(default)/documents/`;
+
   public static addAuthentication(token: string): void {
     FirestoreApi.requestInterceptor = FirestoreApi.axiosInstance.interceptors.request.use(
       (config) => {
@@ -46,8 +49,9 @@ export default class FirestoreApi {
       undefined,
       async (err: any) => {
         const originalRequest = err.config;
-        if (err.response.status === 403 && !originalRequest.retry) {
-          console.debug('403 has been intercepted');
+        if ((err.response.status === 403 || err.response.status === 401)
+              && !originalRequest.retry) {
+          console.debug('%d has been intercepted', err.response.status);
           originalRequest.retry = true;
           await authenticateOnRejected();
           return FirestoreApi.axiosInstance(originalRequest);
@@ -73,15 +77,10 @@ export default class FirestoreApi {
    * @param requestPath to be appended to `databaseURL`: `/tables/OmPYCSFswA4DwR5ImWGN` for example
    * @returns a JSON object
    */
-  public static getFromFirebaseDB(requestPath: string): Promise<AxiosResponse<any>> {
+  public static getFromFirestoreDB(requestPath: string): Promise<AxiosResponse<any>> {
+    console.debug('Firestore base url', FirestoreApi.urlBase);
     return FirestoreApi.axiosInstance
-      .get(
-        `${FirebaseConfig.firestoreApiEndpoint}\
-        projects/\
-        ${FirebaseConfig.projectId}\
-        /databases/(default)/documents/\
-        ${requestPath}`,
-      );
+      .get(`${FirestoreApi.urlBase}${requestPath}`);
   }
 
   /**

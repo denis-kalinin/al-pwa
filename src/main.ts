@@ -1,6 +1,6 @@
 import Vue from 'vue';
 // import App from '@/App.vue';
-import Dashboard from '@/views/Dashboard.vue';
+// import Dashboard from '@/views/Dashboard.vue';
 import FirestoreDashboard from '@/views/FirestoreDashboard.vue';
 import '@/registerServiceWorker';
 import router from '@/router';
@@ -16,5 +16,5 @@ new Vue({
   router,
   store,
   vuetify,
-  render: (h) => h(Dashboard),
+  render: (h) => h(FirestoreDashboard),
 }).$mount('#app');

@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="authRequired" persistent max-width="500px">
     <v-card>
-      <v-card-title>Login Form</v-card-title>
+      <v-card-title>Firebase Login Form</v-card-title>
       <v-card-text>
         <v-form>
           <v-text-field
@@ -31,6 +31,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import EventBus from '@/services/eventbus';
+import '@/firestore';
 
 @Component({
   name: 'FirestoreLoginForm',
@@ -50,12 +51,12 @@ export default class LoginForm extends Vue {
     this.authReq = false;
     const payload = doAuthentication
       ? { username: this.email, password: this.password } : undefined;
-    EventBus.$emit('firestore-auth-response', payload);
+    EventBus.$emit('firestore-auth-credentials', payload);
     // FIXME this.password = undefined;
   }
 
   mounted() {
-    console.log('Dashboard mounted');
+    console.log('FirestoreLoginForm mounted');
     EventBus.$on('firestore-auth-request', () => {
       console.debug('FirestoreLoginForm firestore-auth-request');
       this.authReq = true;

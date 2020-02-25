@@ -17,6 +17,6 @@ export interface IRootState {
 export default new Vuex.Store<IRootState>({
   strict: process.env.NODE_ENV !== 'production',
   modules: {
-    authentication: AuthenticationStateModule,
+    // authentication: AuthenticationStateModule,
   },
 });

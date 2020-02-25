@@ -1,7 +1,10 @@
 import axios from 'axios';
+import { getModule } from 'vuex-module-decorators';
 import { usernameAuthProvider } from '@/firestore/FirestoreAuthProvider';
 import FirestoreApi from '@/firestore/api/FirestoreApi';
 import EventBus from '@/services/eventbus';
+import { IFirestoreUserDetails } from '@/firestore/api/IFirestoreAuthenticationState';
+import FirestoreAuthState from '@/firestore/FirestoreAuthState';
 
 export default class FirestoreUserService {
   /**
@@ -10,6 +13,10 @@ export default class FirestoreUserService {
   private localRefereshToken: string | null = null;
 
   private sessionStoragePath: string = `${usernameAuthProvider.name}/refreshToken`;
+
+  private authenticateOnReject = () : Promise<string> => this.getJWT();
+
+  private static firestoreAuthState = getModule(FirestoreAuthState);
 
   constructor() {
     FirestoreApi.authenticationInterceptor = this.authenticateOnReject;
@@ -33,8 +40,6 @@ export default class FirestoreUserService {
     }
   }
 
-  private authenticateOnReject = () : Promise<string> => this.getJWT()
-
   /**
    * Authenticates with `username` and `password` and adds interceptor
    * with `Authorization` header to FirestoreApi
@@ -42,15 +47,16 @@ export default class FirestoreUserService {
    * @param password
    * @returns refreshToken promise
    */
-  public async login(credentials: {username: string, password: string}): Promise<string> {
-    console.debug('loggig in', credentials.username);
+  public async login(credentials: { username: string, password: string }): Promise<string> {
+    console.debug('loggig in', credentials?.username);
     const { url, data, config } = usernameAuthProvider.getNewJWTRequestData(credentials);
     const response = await axios.post(url, data, config);
     if (response.data?.idToken) {
       console.debug('Login response', response.data);
-      const { idToken, refreshToken } = response.data;
+      const { idToken, refreshToken, email } = response.data;
       FirestoreApi.addAuthentication(idToken);
       this.refreshToken = refreshToken;
+      FirestoreUserService.firestoreAuthState.updateUserDetails({ email });
       return Promise.resolve(refreshToken);
     }
     return Promise.reject(new Error('idToken is not found in the HTTP response'));
@@ -64,6 +70,7 @@ export default class FirestoreUserService {
     if (full) {
       this.refreshToken = null;
     }
+    FirestoreUserService.firestoreAuthState.updateUserDetails();
     return Promise.resolve();
   }
 
@@ -87,16 +94,16 @@ export default class FirestoreUserService {
     const authObj = await new Promise(
       (
         resolve: (credentials?: { username: string; password: string; }) => void,
-        reject: () => void,
+        reject: (error: Error) => void,
       ) => {
         EventBus.$once('firestore-auth-credentials', (credentials: {
           username: string;
           password: string;
         }) => {
-          console.debug('EventBus on firestore-auth-credentials', credentials.username);
+          console.debug('EventBus on firestore-auth-credentials', credentials?.username);
           if (!credentials) {
             console.debug('credentials are empty');
-            reject();
+            reject(new Error('Authentication canceled'));
           } else {
             console.debug('credentials:', credentials.username);
             resolve(credentials);
@@ -118,9 +125,12 @@ export default class FirestoreUserService {
   public static async refreshAuthentication(refreshToken: string): Promise<string> {
     const { url, data, config } = usernameAuthProvider.getRefreshJWTRequestData(refreshToken);
     const response = await axios.post(url, data, config);
-    if (response.data.id_token) {
-      console.debug('Refreshed! id_token found', response.data.id_token);
-      return response.data.id_token;
+    const idToken = response.data.id_token;
+    const userId = response.data.user_id;
+    if (idToken) {
+      console.debug('Refreshed! id_token found', response.data);
+      FirestoreUserService.firestoreAuthState.updateUserDetails({ nickname: userId });
+      return idToken;
     }
     return Promise.reject(new Error('idToken is undefined'));
   }

@@ -110,14 +110,14 @@ import FirestoreLoginForm from '@/firestore/components/FirestoreLoginForm.vue';
 
 
 @Component({
-  name: 'Dashboard',
+  name: 'FirestoreDashboard',
   components: {
     AlAppHeader,
     AlAppDrawer,
     FirestoreLoginForm,
   },
 })
-export default class Dashboard extends Vue {
+export default class FirestoreDashboard extends Vue {
   dialog: boolean = false;
 
   drawer: boolean = false;

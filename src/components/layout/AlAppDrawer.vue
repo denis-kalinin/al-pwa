@@ -71,26 +71,20 @@
         </v-list-item>
       </template>
       <!-- customized -->
-      <v-list-item :to="{ name: 'login'}">
-        <v-list-item-action><v-icon>mdi-location-enter</v-icon></v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Login</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
       <v-list-item :to="{ name: 'Firestore'}">
         <v-list-item-action><v-icon>mdi-fire</v-icon></v-list-item-action>
         <v-list-item-content>
           <v-list-item-title>Firestore</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <table-list-view></table-list-view>
+      <!-- table-list-view -->
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import TableListView from '@/views/TableListView.vue';
+// import TableListView from '@/views/TableListView.vue';
 /**
  * `<al-app-drawer />` &ndash; left panel
  * @version 1.0.1
@@ -98,7 +92,7 @@ import TableListView from '@/views/TableListView.vue';
 @Component({
   name: 'AlAppDrawer',
   components: {
-    TableListView,
+    // TableListView,
   },
 })
 export default class AlAppDrawer extends Vue {
@@ -118,7 +112,7 @@ export default class AlAppDrawer extends Vue {
       {
         path: '/Firestore',
         name: 'Firestore',
-        component: () => import(/* webpackChunkName: "firestore" */ '@/views/FirestoreView.vue'),
+        component: () => import(/* webpackChunkName: "firestore" */ '@/firestore/components/FirestorePane.vue'),
       },
     ];
     this.$router.addRoutes(routesToAdd);

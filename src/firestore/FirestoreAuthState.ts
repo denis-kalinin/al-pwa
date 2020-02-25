@@ -5,20 +5,23 @@ import { IFirestoreAuthenticationState, IFirestoreUserDetails } from '@/firestor
 import store from '@/store';
 
 @Module({
-  dynamic: true, namespaced: true, store, name: 'firestoreAuth',
+  dynamic: true,
+  namespaced: true,
+  store,
+  name: 'firestoreAuth',
 })
 export default class FirestoreAuthState extends VuexModule
   implements IFirestoreAuthenticationState {
   /**
    * @override {@link IFirestoreAuthenticationState#userDetails}
    */
-  public userDetails?: IFirestoreUserDetails;
+  public userDetails: IFirestoreUserDetails = {};
 
   /**
    * @override {@link IFirestoreAuthenticationState#username}
    */
   public get username(): string | undefined {
-    return this.userDetails?.nickname ?? this.userDetails?.email;
+    return this.userDetails.nickname ?? this.userDetails.email;
   }
 
   /**
@@ -32,6 +35,6 @@ export default class FirestoreAuthState extends VuexModule
 
   @Mutation
   private setUserDetails(userDetails?:IFirestoreUserDetails): void {
-    this.userDetails = userDetails;
+    this.userDetails = userDetails ?? {};
   }
 }
