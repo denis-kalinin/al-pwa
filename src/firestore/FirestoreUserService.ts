@@ -3,7 +3,7 @@ import { getModule } from 'vuex-module-decorators';
 import { usernameAuthProvider } from '@/firestore/FirestoreAuthProvider';
 import FirestoreApi from '@/firestore/api/FirestoreApi';
 import EventBus from '@/services/eventbus';
-import { IFirestoreUserDetails } from '@/firestore/api/IFirestoreAuthenticationState';
+// import { IFirestoreUserDetails } from '@/firestore/api/IFirestoreAuthenticationState';
 import FirestoreAuthState from '@/firestore/FirestoreAuthState';
 
 export default class FirestoreUserService {
