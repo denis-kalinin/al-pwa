@@ -23,19 +23,21 @@ export default class FirestoreUserService {
   }
 
   public get refreshToken(): string | null {
-    return globalThis.sessionStorage?.getItem(this.sessionStoragePath) ?? this.localRefereshToken;
+    const globThis = globalThis ?? window.self;
+    return globThis.sessionStorage?.getItem(this.sessionStoragePath) ?? this.localRefereshToken;
   }
 
   public set refreshToken(newRefreshToken: string | null) {
+    const globThis = globalThis ?? window.self;
     if (newRefreshToken) {
-      if (globalThis.sessionStorage) {
-        globalThis.sessionStorage.setItem(this.sessionStoragePath, newRefreshToken);
+      if (globThis.sessionStorage) {
+        globThis.sessionStorage.setItem(this.sessionStoragePath, newRefreshToken);
       } else {
         // console.warn('Refresh token is saved in FirestoreUserService instead of sessionStorage');
         this.localRefereshToken = newRefreshToken;
       }
     } else {
-      if (globalThis.sessionStorage) globalThis.sessionStorage.removeItem(this.sessionStoragePath);
+      if (globThis.sessionStorage) globThis.sessionStorage.removeItem(this.sessionStoragePath);
       this.localRefereshToken = null;
     }
   }
