@@ -23,12 +23,12 @@ export default class FirestoreUserService {
   }
 
   public get refreshToken(): string | null {
-    const globThis = globalThis ?? window.self;
+    const globThis = window.self;
     return globThis.sessionStorage?.getItem(this.sessionStoragePath) ?? this.localRefereshToken;
   }
 
   public set refreshToken(newRefreshToken: string | null) {
-    const globThis = globalThis ?? window.self;
+    const globThis = window.self;
     if (newRefreshToken) {
       if (globThis.sessionStorage) {
         globThis.sessionStorage.setItem(this.sessionStoragePath, newRefreshToken);

@@ -4,8 +4,9 @@ import FirebaseConfig from './FirebaseConfig';
 export default class FirestoreApi {
   private static axiosInstance: AxiosInstance = axios.create({
     headers: {
-      post: { // can be common or any other method
-        header1: 'value1',
+      get: { // can be common or any other method
+        'Cache-Control': 'no-store, no-cache',
+        pragma: 'no-cache',
       },
     },
   });
