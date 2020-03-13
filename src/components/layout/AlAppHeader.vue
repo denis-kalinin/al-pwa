@@ -32,17 +32,17 @@
         /></v-avatar>
     </v-btn>
     <!-- firestore -->
-    <v-tooltip bottom v-show="isFirestoreAuthenticated">
+    <v-tooltip bottom v-if="isFirestoreAuthenticated">
       <template v-slot:activator="{ on }">
-        <v-btn v-show="isFirestoreAuthenticated" icon v-on="on" @click="logout()">
+        <v-btn v-if="isFirestoreAuthenticated" icon v-on="on" @click="logout()">
           <v-icon>mdi-fire</v-icon>
         </v-btn>
       </template>
       <span>Username: {{ firestoreUsername }}</span>
     </v-tooltip>
-    <v-tooltip bottom v-show="isFirestoreAuthenticated">
+    <v-tooltip bottom v-if="isFirestoreAuthenticated">
       <template v-slot:activator="{ on }">
-        <v-btn v-show="isFirestoreAuthenticated" icon v-on="on" @click="setStaleToken()">
+        <v-btn v-if="isFirestoreAuthenticated" icon v-on="on" @click="setStaleToken()">
           <v-icon>mdi-bell</v-icon>
         </v-btn>
       </template>
@@ -88,11 +88,11 @@ export default class AppHeader extends Vue {
   // }
 
   get isFirestoreAuthenticated(): boolean {
-    return !!this.firestoreState.userDetails.email || !!this.firestoreState.userDetails.nickname;
+    return this.firestoreState.userData.signedIn;
   }
 
   get firestoreUsername() : string | undefined {
-    return this.firestoreState.username;
+    return this.firestoreState.userData.userDetails?.displayName;
   }
   /*
   get isAuthenticated(): boolean {

@@ -84,7 +84,7 @@ export default class FirestoreApi {
     return axiosInstance
       .get(
         `${firebaseConfig.firestoreApiEndpoint}projects/${firebaseConfig.projectId}/databases/(default)/documents/${requestPath}`,
-        { params: { timestamp: new Date().getTime() }}
+        { params: { timestamp: new Date().getTime() } },
       );
   }
 
@@ -95,6 +95,6 @@ export default class FirestoreApi {
    */
   public static getByNameFromFirebaseDB(name: string): Promise<AxiosResponse<any>> {
     return axiosInstance
-      .get(`${firebaseConfig.firestoreApiEndpoint}${name}`, { params: { timestamp: new Date().getTime() }});
+      .get(`${firebaseConfig.firestoreApiEndpoint}${name}`, { params: { timestamp: new Date().getTime() } });
   }
 }

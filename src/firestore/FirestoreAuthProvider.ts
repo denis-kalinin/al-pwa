@@ -1,26 +1,24 @@
 import { IAuthProvider } from '@/firestore/api/IAuthProvider';
 import { IAxiousRequestData } from '@/firestore/api/IAxiosRequestData';
-import FirestoreConfig from '@/firestore/api/FirebaseConfig';
+import FirebaseConfig from '@/firestore/api/FirebaseConfig';
+import { IAuthCredentials } from '@/services/security/IAuthCredentials';
 
 
 export default class FirestoreUsernameAuthProvider implements IAuthProvider {
   readonly name: string = 'FirebaseAuthProvider';
 
-  private apiKey: string = FirestoreConfig.apiKey;
+  private apiKey: string = FirebaseConfig.apiKey;
 
   /**
    * @override {@link IAuthProvider}
    */
-  getNewJWTRequestData(credentials: { username:string, password:string }): IAxiousRequestData {
+  getNewJWTRequestData(credentials: IAuthCredentials): IAxiousRequestData {
+    credentials.setApiKey(this.apiKey);
     return {
-      url: 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
-      data: {
-        returnSecureToken: true,
-        email: credentials.username,
-        password: credentials.password,
-      },
+      url: credentials.endpoint,
+      data: credentials.body,
       config: {
-        params: { key: this.apiKey },
+        params: credentials.params,
       },
     };
   }
@@ -43,5 +41,5 @@ export default class FirestoreUsernameAuthProvider implements IAuthProvider {
     };
   }
 }
-const usernameAuthProvider: IAuthProvider = new FirestoreUsernameAuthProvider();
-export { usernameAuthProvider };
+const firestoreAuthProvider: IAuthProvider = new FirestoreUsernameAuthProvider();
+export { firestoreAuthProvider };

@@ -1,4 +1,5 @@
 import { IAxiousRequestData } from './IAxiosRequestData';
+import { IAuthCredentials } from '@/services/security/IAuthCredentials';
 
 export interface IAuthProvider {
   /**
@@ -9,11 +10,11 @@ export interface IAuthProvider {
   refreshToken?: string;
   /**
    * @abstract
-   * Gets data for axsious to request JWT
-   * @param credentials username and password
+   * Gets data for axious to request JWT
+   * @param credentials
    *
    */
-  getNewJWTRequestData(credentials: { username: string, password: string }): IAxiousRequestData;
+  getNewJWTRequestData(credentials: IAuthCredentials): IAxiousRequestData;
 
   /**
    * @abstract

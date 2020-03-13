@@ -76,7 +76,7 @@ export default class LoginFormCentered extends Vue {
 
   readonly password: string = 'qwerty';
 
-  private authState!: AuthenticationStateModule
+  private authState!: AuthenticationStateModule;
 
   created() {
     this.authState = getModule(AuthenticationStateModule, this.$store);

@@ -4,12 +4,13 @@ import chaiAsPromised from 'chai-as-promised';
 // import './mocks/storage-mock';
 import FirestoreUserService from '@/firestore/FirestoreUserService';
 import EventBus from '@/services/eventbus';
+import UsernamePasswordCredentials from '@/services/security/UsernamePasswordCredentials';
 
 use(chaiAsPromised);
 
 const isDebugMode : boolean = false;
 const firestoreUserService = new FirestoreUserService();
-const credentials = { username: 'test@example.com', password: 'qwerty' };
+const credentials = new UsernamePasswordCredentials({ username: 'test@example.com', password: 'qwerty' });
 
 console.debug = (message?: any, ...args:[any]) : void => {
   if (isDebugMode) console.log(message, ...args);
@@ -33,7 +34,7 @@ describe('Firestore Authentication tests', () => {
   it(
     'getJWT() => wrong credentials => fail',
     () => {
-      const wrongCredentials = { username: 'fail@example.com', password: 'qwertyyy' };
+      const wrongCredentials = new UsernamePasswordCredentials({ username: 'fail@example.com', password: 'qwertyyy' });
       EventBus.$on(
         'firestore-auth-request',
         () => EventBus.$emit('firestore-auth-credentials', wrongCredentials),
