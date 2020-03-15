@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 8888",
     "build": "vue-cli-service build --modern",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
@@ -13,7 +13,6 @@
     "test:unit:watch": "vue-cli-service test:unit --watch"
   },
   "dependencies": {
-    "al-design-system": "file:../../vueds",
     "axios": "^0.19.2",
     "core-js": "^3.4.4",
     "firebase": "^7.7.0",

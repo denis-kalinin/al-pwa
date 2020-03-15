@@ -1,8 +1,8 @@
 import Vue from 'vue';
 // import App from '@/App.vue';
 // import Dashboard from '@/views/Dashboard.vue';
-import DesignSystem from 'al-design-system';
-import 'al-design-system/dist/system/system.css';
+// import DesignSystem from 'al-design-system';
+// import 'al-design-system/dist/system/system.css';
 import '@/registerServiceWorker';
 import router from '@/router';
 import store from '@/store';
@@ -13,7 +13,7 @@ import i18n from './i18n';
 
 Vue.config.productionTip = false;
 
-Vue.use(DesignSystem);
+// Vue.use(DesignSystem);
 
 // const a = new FirebaseApp();
 

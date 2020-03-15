@@ -29,7 +29,7 @@ class GoogleOIDProvider implements IOpenIDConnect {
     const addPort = port ? `:${port}` : '';
     const redirUri = `${protocol}//${hostname}${addPort}${this.redirectURI}`;
     const addState = state ? `&state=${state}` : '';
-    return `${this.authorizeURI}?client_id=${this.clientID}&redirect_uri=${redirUri}&scope=${this.scope.join(' ')}&response_type=${this.responseType}&response_mode=${this.responseMode}${addState}&nonce=${getNonce()}`;
+    return `${this.authorizeURI}?client_id=${this.clientID}&redirect_uri=${redirUri}&scope=${this.scope.join(' ')}&response_type=${this.responseType}&response_mode=${this.responseMode}${addState}&prompt=select_account&nonce=${getNonce()}`;
   }
 }
 const googleOIDProvider = new GoogleOIDProvider('68264329838-mp2p3l66d22uofvjdlih3621gh05o9i1.apps.googleusercontent.com');

@@ -41,7 +41,24 @@ export default class FirestoreAuthState extends VuexModule
     userDetails: FirebaseAuthResponse,
     authType: AuthType,
   }): void {
-    this.context.commit('setUserDetails', typedResponse);
+    switch (typedResponse.authType) {
+      case AuthType.TOKEN: {
+        const ud = FirestoreAuthState.tokenUserData(
+          typedResponse.userDetails as IFirebaseAuthTokenResponse,
+        );
+        this.context.commit('setUserDetails', ud);
+        break;
+      }
+      case AuthType.REFRESH: {
+        FirestoreAuthState.refreshUserData(
+          typedResponse.userDetails as IFirebaseAuthRefreshResponse,
+        ).then((firebaseUserDetails) => {
+          this.context.commit('setUserDetails', firebaseUserDetails);
+        });
+        break;
+      }
+      default:
+    }
   }
 
   @Mutation
@@ -52,34 +69,12 @@ export default class FirestoreAuthState extends VuexModule
   }
 
   @Mutation
-  private setUserDetails(
-    typedResponse: { userDetails:FirebaseAuthResponse, authType: AuthType },
-  ): void {
+  private setUserDetails(userDetails: IUserDetails): void {
     this.userData.signedIn = true;
-    const authState = this;
-    switch (typedResponse.authType) {
-      case AuthType.TOKEN: {
-        FirestoreAuthState.tokenUserData(
-          typedResponse.userDetails as IFirebaseAuthTokenResponse,
-          authState,
-        );
-        break;
-      }
-      case AuthType.REFRESH: {
-        FirestoreAuthState.refreshUserData(
-          typedResponse.userDetails as IFirebaseAuthRefreshResponse,
-          authState,
-        );
-        break;
-      }
-      default:
-    }
+    this.userData.userDetails = userDetails;
   }
 
-  private static tokenUserData(
-    userDetails: IFirebaseAuthTokenResponse,
-    authState: FirestoreAuthState,
-  ): void {
+  private static tokenUserData(userDetails: IFirebaseAuthTokenResponse): IUserDetails {
     const {
       email,
       fullName,
@@ -89,12 +84,11 @@ export default class FirestoreAuthState extends VuexModule
     } = userDetails;
     let { displayName } = userDetails;
     if (!displayName) {
-      displayName = ((authState.userData.userDetails?.displayName ?? fullName) ?? email);
+      displayName = fullName ?? email;
     } else if (displayName.length === 0) {
-      displayName = (fullName ?? email);
+      displayName = fullName ?? email;
     }
-    const { userData } = authState;
-    userData.userDetails = {
+    return {
       email,
       fullName,
       displayName,
@@ -104,32 +98,21 @@ export default class FirestoreAuthState extends VuexModule
     };
   }
 
-  private static refreshUserData(
+  private static async refreshUserData(
     userDetails: IFirebaseAuthRefreshResponse,
-    authState: FirestoreAuthState,
-  ): void {
-    UserDataService.getUserData(userDetails.id_token)
-      .then((firebaseUserData) => {
-        if (firebaseUserData.users.length > 0) {
-          const { userData } = authState;
-          if (userData.userDetails) {
-            userData.userDetails.displayName = firebaseUserData.users[0].displayName;
-          } else {
-            const {
-              photoUrl,
-              email,
-            } = firebaseUserData.users[0];
-            let { displayName } = firebaseUserData.users[0];
-            if (!displayName || displayName.length === 0) {
-              displayName = email;
-            }
-            userData.userDetails = {
-              email,
-              photoUrl,
-              displayName,
-            };
-          }
-        }
-      });
+  ): Promise<IUserDetails> {
+    const firebaseUserData = await UserDataService.getUserData(userDetails.id_token);
+    if (firebaseUserData.users.length > 0) {
+      const {
+        photoUrl,
+        email,
+      } = firebaseUserData.users[0];
+      let { displayName } = firebaseUserData.users[0];
+      if (!displayName || displayName.length === 0) {
+        displayName = email;
+      }
+      return { email, photoUrl, displayName };
+    }
+    throw new Error('user data is empty');
   }
 }
