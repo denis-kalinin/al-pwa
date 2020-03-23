@@ -77,6 +77,12 @@
           <v-list-item-title>Firestore</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item :to="{ name: 'Bitcoin'}">
+        <v-list-item-action><v-icon>mdi-bitcoin</v-icon></v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title>Bitcoin</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
       <!-- table-list-view -->
     </v-list>
   </v-navigation-drawer>
@@ -84,6 +90,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
+import BitcoinRate from '@/components/bitcoin/BitcoinRate.vue';
 // import TableListView from '@/views/TableListView.vue';
 /**
  * `<al-app-drawer />` &ndash; left panel
@@ -113,6 +120,11 @@ export default class AlAppDrawer extends Vue {
         path: '/Firestore',
         name: 'Firestore',
         component: () => import(/* webpackChunkName: "firestore" */ '@/firestore/components/FirestorePane.vue'),
+      },
+      {
+        path: '/Bitcoin',
+        name: 'Bitcoin',
+        component: BitcoinRate,
       },
     ];
     this.$router.addRoutes(routesToAdd);

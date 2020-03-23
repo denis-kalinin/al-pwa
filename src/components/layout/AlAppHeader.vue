@@ -35,10 +35,14 @@
     <v-tooltip bottom v-if="isFirestoreAuthenticated">
       <template v-slot:activator="{ on }">
         <v-btn v-if="isFirestoreAuthenticated" icon v-on="on" @click="logout()">
-          <v-icon>mdi-fire</v-icon>
+          <v-avatar color="indigo">
+            <img v-if="firestoreAvatar"
+              :src="firestoreAvatar" :alt="firestoreUsername" />
+            <v-icon v-else dark>mdi-account-circle</v-icon>
+          </v-avatar>
         </v-btn>
       </template>
-      <span>Username: {{ firestoreUsername }}</span>
+      <span>{{ firestoreUsername }}</span>
     </v-tooltip>
     <v-tooltip bottom v-if="isFirestoreAuthenticated">
       <template v-slot:activator="{ on }">
@@ -93,6 +97,10 @@ export default class AppHeader extends Vue {
 
   get firestoreUsername() : string | undefined {
     return this.firestoreState.userData.userDetails?.displayName;
+  }
+
+  get firestoreAvatar() : string | undefined {
+    return this.firestoreState.userData.userDetails?.photoUrl;
   }
   /*
   get isAuthenticated(): boolean {
