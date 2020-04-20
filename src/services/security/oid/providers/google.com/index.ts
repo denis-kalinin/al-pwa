@@ -4,7 +4,6 @@ import OpenIDConnectScopes from '@/services/security/oid/OpenIDConnectScope';
 import OpenIDConnectResponseMode from '@/services/security/oid/OpenIDConnectResponseMode';
 import { getNonce } from '@/services/security/SecurityUtils';
 import GoogleCredentials from '@/services/security/oid/providers/google.com/GoogleCredentials';
-import GoogleOidcLoginComponent from '@/services/security/oid/providers/google.com/GoogleOidcLoginComponent.vue';
 import router from '@/router';
 
 class GoogleOIDProvider implements IOpenIDConnect {
@@ -31,10 +30,17 @@ class GoogleOIDProvider implements IOpenIDConnect {
     const addState = state ? `&state=${state}` : '';
     return `${this.authorizeURI}?client_id=${this.clientID}&redirect_uri=${redirUri}&scope=${this.scope.join(' ')}&response_type=${this.responseType}&response_mode=${this.responseMode}${addState}&prompt=select_account&nonce=${getNonce()}`;
   }
+
+  /**
+   * Sets Vue component class that handles return from Google authentication page
+   * @param component
+   */
+  setRedirectComponent(loginRedirectComponent: any) {
+    router.addRoutes([{
+      path: this.redirectURI,
+      component: loginRedirectComponent,
+    }]);
+  }
 }
 const googleOIDProvider = new GoogleOIDProvider('68264329838-mp2p3l66d22uofvjdlih3621gh05o9i1.apps.googleusercontent.com');
-router.addRoutes([{
-  path: googleOIDProvider.redirectURI,
-  component: GoogleOidcLoginComponent,
-}]);
 export { googleOIDProvider, GoogleCredentials };

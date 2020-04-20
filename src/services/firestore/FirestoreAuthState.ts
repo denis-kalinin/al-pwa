@@ -1,11 +1,19 @@
 import {
-  VuexModule, Module, Mutation, Action, getModule, MutationAction,
+  VuexModule,
+  Module,
+  Mutation,
+  Action,
+  getModule,
+  MutationAction,
 } from 'vuex-module-decorators';
-import { IFirestoreAuthenticationState, IUserDetails } from '@/firestore/api/IFirestoreAuthenticationState';
+import { IFirestoreAuthenticationState, IUserDetails } from './api/IFirestoreAuthenticationState';
 import store from '@/store';
 import {
-  FirebaseAuthResponse, IFirebaseAuthTokenResponse, IFirebaseAuthRefreshResponse, AuthType,
-} from '@/firestore/api/IFirebaseAuthResponses';
+  FirebaseAuthResponse,
+  IFirebaseAuthTokenResponse,
+  IFirebaseAuthRefreshResponse,
+  AuthType,
+} from './api/IFirebaseAuthResponses';
 import { UserDataService } from '@/services/security/UserDataService';
 
 @Module({

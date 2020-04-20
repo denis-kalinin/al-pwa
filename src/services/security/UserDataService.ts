@@ -1,5 +1,5 @@
 import axios from 'axios';
-import FirebaseConfig from '@/firestore/api/FirebaseConfig';
+import FirebaseConfig from '@/services/firestore/api/FirebaseConfig';
 
 class UserDataService {
   public static async getUserData(idToken: string) : Promise<FirebaseUserData> {

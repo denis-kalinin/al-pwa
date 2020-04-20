@@ -2,11 +2,19 @@
 
 ## Project descirption
 Simple PWA (progressive web application) on Vue.js in TypeScript.
+
 Features:
 - [Vuetify](https://vuetifyjs.com/)
 - [Material icons font](https://material.io/resources/icons/)
 - [Lazy loading](https://router.vuejs.org/guide/advanced/lazy-loading.html) - click "About" in demo
 - Offline detection
+- Fetches list of tables from [Firestore](https://firebase.google.com/docs/firestore/)
+- Authentication:
+  - login and password
+  - with Google account
+- Uses simple JSON API, i.e. it doesn't use any javascript library for Firestore or Google authentication
+- i18n (to be done)
+
 
 Build pipeline with [Travis-CI](.travis.yml) and deploy to [Yandex.Cloud](https://al-pwa.website.yandexcloud.net/).
 

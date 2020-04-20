@@ -2,8 +2,8 @@ import { expect, use } from 'chai';
 import 'chai/register-should';
 import chaiAsPromised from 'chai-as-promised';
 // import './mocks/storage-mock';
-import FirestoreUserService from '@/firestore/FirestoreUserService';
-import FirestoreApi from '@/firestore/api/FirestoreApi';
+import FirestoreUserService from '@/services/firestore/FirestoreUserService';
+import FirestoreApi from '@/services/firestore/api/FirestoreApi';
 import EventBus from '@/services/eventbus';
 
 use(chaiAsPromised);

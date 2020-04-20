@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import 'chai/register-should';
 import chaiAsPromised from 'chai-as-promised';
 // import './mocks/storage-mock';
-import FirestoreUserService from '@/firestore/FirestoreUserService';
+import FirestoreUserService from '@/services/firestore/FirestoreUserService';
 import EventBus from '@/services/eventbus';
 import UsernamePasswordCredentials from '@/services/security/UsernamePasswordCredentials';
 

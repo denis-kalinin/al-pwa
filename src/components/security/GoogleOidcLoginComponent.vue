@@ -3,8 +3,8 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import GoogleCredentials from './GoogleCredentials';
-import firestoreUserService from '@/firestore';
+import GoogleCredentials from '@/services/security/oid/providers/google.com/GoogleCredentials';
+import firestoreUserService from '@/services/firestore';
 import router from '@/router';
 
 @Component({

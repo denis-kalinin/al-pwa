@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { getModule } from 'vuex-module-decorators';
-import { firestoreAuthProvider } from '@/firestore/FirestoreAuthProvider';
-import FirestoreApi from '@/firestore/api/FirestoreApi';
+import { firestoreAuthProvider } from './FirestoreAuthProvider';
+import FirestoreApi from './api/FirestoreApi';
 import EventBus from '@/services/eventbus';
 // import { IFirestoreUserDetails } from '@/firestore/api/IFirestoreAuthenticationState';
-import FirestoreAuthState from '@/firestore/FirestoreAuthState';
+import FirestoreAuthState from './FirestoreAuthState';
 import { IAuthCredentials } from '@/services/security/IAuthCredentials';
-import { IFirebaseAuthTokenResponse, AuthType } from '@/firestore/api/IFirebaseAuthResponses';
+import { IFirebaseAuthTokenResponse, AuthType } from './api/IFirebaseAuthResponses';
 
 export default class FirestoreUserService {
   /**

@@ -35,7 +35,8 @@ import EventBus from '@/services/eventbus';
 import { googleOIDProvider } from '@/services/security/oid/providers/google.com';
 import UsernamePasswordCredentials from '@/services/security/UsernamePasswordCredentials';
 import router from '@/router';
-import '@/firestore';
+import '@/services/firestore';
+import GoogleOidcLoginComponent from '@/components/security/GoogleOidcLoginComponent.vue';
 
 @Component({
   name: 'FirestoreLoginForm',
@@ -63,6 +64,7 @@ export default class LoginForm extends Vue {
 
   mounted() {
     console.log('FirestoreLoginForm mounted');
+    googleOIDProvider.setRedirectComponent(GoogleOidcLoginComponent);
     EventBus.$on('firestore-auth-request', () => {
       console.debug('FirestoreLoginForm firestore-auth-request');
       this.authReq = true;

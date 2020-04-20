@@ -119,7 +119,7 @@ export default class AlAppDrawer extends Vue {
       {
         path: '/Firestore',
         name: 'Firestore',
-        component: () => import(/* webpackChunkName: "firestore" */ '@/firestore/components/FirestorePane.vue'),
+        component: () => import(/* webpackChunkName: "firestore" */ '@/components/firestore/FirestorePane.vue'),
       },
       {
         path: '/Bitcoin',

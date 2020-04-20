@@ -1,6 +1,6 @@
-import { IAuthProvider } from '@/firestore/api/IAuthProvider';
-import { IAxiousRequestData } from '@/firestore/api/IAxiosRequestData';
-import FirebaseConfig from '@/firestore/api/FirebaseConfig';
+import { IAuthProvider } from './api/IAuthProvider';
+import { IAxiousRequestData } from './api/IAxiosRequestData';
+import FirebaseConfig from './api/FirebaseConfig';
 import { IAuthCredentials } from '@/services/security/IAuthCredentials';
 
 

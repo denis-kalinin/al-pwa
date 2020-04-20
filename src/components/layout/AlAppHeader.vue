@@ -59,9 +59,9 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
 // import AuthenticationStateModule from '@/store/modules/auth';
-import firestoreUserService from '@/firestore';
-import FirestoreAuthState from '@/firestore/FirestoreAuthState';
-import FirestoreApi from '../../firestore/api/FirestoreApi';
+import firestoreUserService from '@/services/firestore';
+import FirestoreAuthState from '@/services/firestore/FirestoreAuthState';
+import FirestoreApi from '@/services/firestore/api/FirestoreApi';
 @Component({
   name: 'AlAppHeader',
 })
@@ -73,6 +73,10 @@ export default class AppHeader extends Vue {
 
   private firestoreState: FirestoreAuthState = getModule(FirestoreAuthState, this.$store);
 
+  /**
+   * This token lets you emulate a staled token, thus the app will trigger token renew with
+   * refresh token.
+   */
   private staleToken: string = [
     'eyJhbGciOiJSUzI1NiIsImtpZCI6ImNiOGUwZDk3Mjg2MWIwNGJlN2RjNzVhMWIzYmUzYjIyOWIyNWYyMDUiLCJ0eXAiO',
     'iJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYWwtcHdhLWZpcmViYXNlIiwiYXVkIjo',

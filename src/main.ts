@@ -1,15 +1,12 @@
 import Vue from 'vue';
-// import App from '@/App.vue';
-// import Dashboard from '@/views/Dashboard.vue';
 // import DesignSystem from 'al-design-system';
 // import 'al-design-system/dist/system/system.css';
 import '@/registerServiceWorker';
 import router from '@/router';
 import store from '@/store';
 import vuetify from '@/plugins/vuetify';
-import FirestoreDashboard from '@/views/FirestoreDashboard.vue';
+import App from '@/App.vue';
 import i18n from './i18n';
-// import FirebaseApp from './services/FirebaseApp';
 
 Vue.config.productionTip = false;
 
@@ -22,5 +19,5 @@ new Vue({
   store,
   vuetify,
   i18n,
-  render: (h) => h(FirestoreDashboard),
+  render: (h) => h(App),
 }).$mount('#app');
